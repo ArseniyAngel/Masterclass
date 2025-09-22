@@ -72,8 +72,10 @@ class StartWindow(QtWidgets.QMainWindow):
 
     def on_button_click(self):
         slider_value = self.vertical_slider.value()
-        if not hasattr(self, 'play_window'):
-            self.play_window = PlayWindow(slider_value)  # Передаем себя в конструктор
+
+        if hasattr(self, 'play_window'):
+            del self.play_window
+        self.play_window = PlayWindow(slider_value, self)
         self.play_window.show()
         self.close()
 

@@ -1,11 +1,17 @@
+import time
+
 from PyQt6 import QtWidgets, uic
 import sys
 
 from random import randint
 
+from PyQt6.QtCore import Qt
+from PyQt6.QtGui import QIcon, QPixmap
+from PyQt6.QtWidgets import QPushButton
+
 
 class PlayWindow(QtWidgets.QMainWindow):
-    def __init__(self, slider_value=1):
+    def __init__(self, slider_value=1, window=None):
         super().__init__()
         uic.loadUi('windows/play screen.ui', self)
         self.slider_value = slider_value
@@ -14,7 +20,7 @@ class PlayWindow(QtWidgets.QMainWindow):
         self.total_rooms = 0
         self.ghost_door = 0
         self.difficulty = ""
-
+        self.start_window = window
         self.setup_game()
         self.connect_signals()
 
@@ -40,13 +46,31 @@ class PlayWindow(QtWidgets.QMainWindow):
         }
 
         self.total_rooms = difficult_rooms[self.difficulty]
-
         self.first_door = self.findChild(QtWidgets.QPushButton, 'firstDoor')
         self.second_door = self.findChild(QtWidgets.QPushButton, 'secondDoor')
         self.third_door = self.findChild(QtWidgets.QPushButton, 'thirdDoor')
         self.label_info = self.findChild(QtWidgets.QLabel, 'labelInfo')
         self.label_score = self.findChild(QtWidgets.QLabel, 'labelScore')
         self.label_room = self.findChild(QtWidgets.QLabel, 'labelRoom')
+
+        door_width, door_height = 200, 250  # или нужные вам размеры
+
+        for door in [self.first_door, self.second_door, self.third_door]:
+            door.setFixedSize(door_width, door_height)
+        icon = QIcon("Closed door.png")
+
+        self.first_door.setIcon(icon)
+        self.first_door.setIconSize(self.first_door.size())
+
+        self.second_door.setIcon(icon)
+        self.second_door.setIconSize(self.second_door.size())
+
+        self.third_door.setIcon(icon)
+        self.third_door.setIconSize(self.third_door.size())
+
+        self.first_door.setText("")
+        self.second_door.setText("")
+        self.third_door.setText("")
 
     def connect_signals(self):
         """Подключаем сигналы кнопок"""
@@ -76,6 +100,14 @@ class PlayWindow(QtWidgets.QMainWindow):
         # Блокируем кнопки до следующего раунда
         self.set_buttons_enabled(False)
 
+        doors = {"1": self.first_door,
+                 "2": self.second_door,
+                 "3": self.third_door}
+        for i in doors:
+            if int(i) == door_number:
+                doors[i].setIcon(QIcon("opened door.png"))
+            doors[i].setIconSize(doors[i].size())
+
         if door_number != self.ghost_door:
             # Игрок выиграл раунд
             points = self.calculate_points()
@@ -86,15 +118,22 @@ class PlayWindow(QtWidgets.QMainWindow):
 
             # Задержка перед следующим раундом
             QtWidgets.QApplication.processEvents()  # Обновляем UI
-            # QtWidgets.QTimer.singleShot(1500, self.next_room)  # Ждем 1.5 секунды
+            time.sleep(1.5)
             self.next_room()
         else:
             # Игрок проиграл
             if self.label_info:
-                self.label_info.setText("👻 Бу! Приведение здесь!")
+                self.game_over()
 
     def next_room(self):
         """Подготовка следующей комнаты"""
+        self.first_door.setIcon(QIcon("Closed door.png"))
+        self.first_door.setIconSize(self.first_door.size())
+        self.second_door.setIcon(QIcon("Closed door.png"))
+        self.second_door.setIconSize(self.second_door.size())
+        self.third_door.setIcon(QIcon("Closed door.png"))
+        self.third_door.setIconSize(self.third_door.size())
+
         if self.difficulty != "infinity" and self.current_room >= self.total_rooms:
             self.game_over(win=True)
             return
@@ -113,12 +152,45 @@ class PlayWindow(QtWidgets.QMainWindow):
         self.set_buttons_enabled(False)
 
         if win:
+            self.label_info.setGeometry(50, 100, 200, 150)
+            pixmap = QPixmap("win.png")
+
+            # Масштабируем и устанавливаем
+            self.label_info.setPixmap(pixmap.scaled(
+                350, 300,
+                Qt.AspectRatioMode.KeepAspectRatio,
+                Qt.TransformationMode.SmoothTransformation
+            ))
+
+            # Можно сделать фон прозрачным
+            self.label_info.setStyleSheet("background: transparent;")
+            self.label_info.setGeometry(50, 100, 400, 400)
             message = f"🎉 Победа! Итоговый счет: {self.score}"
         else:
+            self.label_info.setGeometry(50, 100, 200, 150)
+            pixmap = QPixmap("boo.png")
+
+            # Масштабируем и устанавливаем
+            self.label_info.setPixmap(pixmap.scaled(
+                350, 300,
+                Qt.AspectRatioMode.KeepAspectRatio,
+                Qt.TransformationMode.SmoothTransformation
+            ))
+
+            # Можно сделать фон прозрачным
+            self.label_info.setStyleSheet("background: transparent;")
+            self.label_info.setGeometry(50, 100, 400, 400)
             message = f"💀 Игра окончена! Счет: {self.score}"
 
-        if self.label_info:
-            self.label_info.setText(message)
+        if self.label_score:
+            self.label_score.setText(message)
+
+            self.again = QPushButton("Играть снова", self)
+            self.again.setGeometry(300, 300, 200, 50)
+            self.again.clicked.connect(self.go_to_start)
+            self.again.raise_()
+            self.again.show()
+
 
     def set_buttons_enabled(self, enabled):
         """Включение/выключение кнопок"""
@@ -132,6 +204,13 @@ class PlayWindow(QtWidgets.QMainWindow):
             return self.current_room * 10
         else:
             return self.total_rooms * self.current_room
+
+    def go_to_start(self):
+
+        if not hasattr(self, 'start_window'):
+            self.start_window = self.window()
+        self.close()
+        self.start_window.show()
 
 
 if __name__ == "__main__":
