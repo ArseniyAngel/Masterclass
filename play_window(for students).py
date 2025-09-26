@@ -28,23 +28,9 @@ class PlayWindow(QtWidgets.QMainWindow):
 
     def setup_game(self):
         """Настройка параметров игры"""
-        slider_to_difficult = {
-            1: "easy",
-            2: "normal",
-            3: "hard",
-            4: "infinity"
-        }
+        # Сюда впишите код настройки игры
 
-        self.difficulty = slider_to_difficult.get(self.slider_value, "normal")
-
-        difficult_rooms = {
-            "easy": 5,
-            "normal": 8,
-            "hard": 15,
-            "infinity": 0
-        }
-
-        self.total_rooms = difficult_rooms[self.difficulty]
+        # Сюда впишите код настройки игры
         self.first_door = self.findChild(QtWidgets.QPushButton, 'firstDoor')
         self.second_door = self.findChild(QtWidgets.QPushButton, 'secondDoor')
         self.third_door = self.findChild(QtWidgets.QPushButton, 'thirdDoor')
@@ -96,47 +82,15 @@ class PlayWindow(QtWidgets.QMainWindow):
 
     def door_selected(self, door_number):
         """Обработка выбора двери"""
-        self.set_buttons_enabled(False)
+        # Сюда впишите код настройки игры
 
-        doors = {"1": self.first_door,
-                 "2": self.second_door,
-                 "3": self.third_door}
-        for i in doors:
-            if int(i) == door_number:
-                doors[i].setIcon(QIcon("opened door.png"))
-            doors[i].setIconSize(doors[i].size())
-
-        if door_number != self.ghost_door:
-            points = self.calculate_points()
-            self.score += points
-
-            if self.label_info:
-                self.label_info.setText(f"✅ Нет приведения! +{points} очков")
-
-            QtWidgets.QApplication.processEvents()
-            time.sleep(1.5)
-            self.next_room()
-        else:
-            if self.label_info:
-                self.game_over()
+        # Сюда впишите код настройки игры
 
     def next_room(self):
         """Подготовка следующей комнаты"""
-        self.first_door.setIcon(QIcon("Closed door.png"))
-        self.first_door.setIconSize(self.first_door.size())
-        self.second_door.setIcon(QIcon("Closed door.png"))
-        self.second_door.setIconSize(self.second_door.size())
-        self.third_door.setIcon(QIcon("Closed door.png"))
-        self.third_door.setIconSize(self.third_door.size())
+        # Сюда впишите код настройки игры
 
-        if self.difficulty != "infinity" and self.current_room >= self.total_rooms:
-            self.game_over(win=True)
-            return
-
-        self.current_room += 1
-        self.ghost_door = randint(1, 3)
-        self.update_ui()
-        self.set_buttons_enabled(True)
+        # Сюда впишите код настройки игры
 
     def game_over(self, win=False):
         """Завершение игры"""
@@ -207,10 +161,9 @@ class PlayWindow(QtWidgets.QMainWindow):
 
     def calculate_points(self):
         """Расчет очков за комнату"""
-        if self.difficulty == "infinity":
-            return self.current_room * 10
-        else:
-            return self.total_rooms * self.current_room
+        # Сюда впишите код настройки игры
+
+        # Сюда впишите код настройки игры
 
     def go_to_start(self):
 

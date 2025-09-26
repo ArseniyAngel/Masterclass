@@ -96,16 +96,9 @@ class StartWindow(QtWidgets.QMainWindow):
 
     def on_slider_released(self):
         """Изменение цвета текста в зависимости от значения слайдера"""
-        self.reset_text_colors()
-        value = self.vertical_slider.value()
-        if value == 3:
-            self.set_label_color(self.label3, 'red')
-        elif value == 2:
-            self.set_label_color(self.label2, 'blue')
-        elif value == 1:
-            self.set_label_color(self.label1, "green")
-        else:
-            self.set_label_color(self.label4, 'violet')
+        # Сюда впишите код настройки игры
+
+        # Сюда впишите код настройки игры
 
     def set_label_color(self, label, color):
         """Установка цвета текста для label"""
