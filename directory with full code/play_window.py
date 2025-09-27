@@ -56,7 +56,7 @@ class PlayWindow(QtWidgets.QMainWindow):
 
         for door in [self.first_door, self.second_door, self.third_door]:
             door.setFixedSize(door_width, door_height)
-        icon = QIcon("Closed door.png")
+        icon = QIcon("../pictures/Closed door.png")
 
         self.first_door.setIcon(icon)
         self.first_door.setIconSize(self.first_door.size())
@@ -103,7 +103,7 @@ class PlayWindow(QtWidgets.QMainWindow):
                  "3": self.third_door}
         for i in doors:
             if int(i) == door_number:
-                doors[i].setIcon(QIcon("opened door.png"))
+                doors[i].setIcon(QIcon("../pictures/opened door.png"))
             doors[i].setIconSize(doors[i].size())
 
         if door_number != self.ghost_door:
@@ -122,11 +122,11 @@ class PlayWindow(QtWidgets.QMainWindow):
 
     def next_room(self):
         """Подготовка следующей комнаты"""
-        self.first_door.setIcon(QIcon("Closed door.png"))
+        self.first_door.setIcon(QIcon("../pictures/Closed door.png"))
         self.first_door.setIconSize(self.first_door.size())
-        self.second_door.setIcon(QIcon("Closed door.png"))
+        self.second_door.setIcon(QIcon("../pictures/Closed door.png"))
         self.second_door.setIconSize(self.second_door.size())
-        self.third_door.setIcon(QIcon("Closed door.png"))
+        self.third_door.setIcon(QIcon("../pictures/Closed door.png"))
         self.third_door.setIconSize(self.third_door.size())
 
         if self.difficulty != "infinity" and self.current_room >= self.total_rooms:
@@ -144,7 +144,7 @@ class PlayWindow(QtWidgets.QMainWindow):
 
         if win:
             self.label_info.setGeometry(50, 100, 200, 150)
-            pixmap = QPixmap("win.png")
+            pixmap = QPixmap("../pictures/win.png")
 
             # Масштабируем и устанавливаем
             self.label_info.setPixmap(pixmap.scaled(
@@ -158,7 +158,7 @@ class PlayWindow(QtWidgets.QMainWindow):
             message = f"🎉 Победа! Итоговый счет: {self.score}"
         else:
             self.label_info.setGeometry(50, 100, 200, 150)
-            pixmap = QPixmap("boo.png")
+            pixmap = QPixmap("../pictures/boo.png")
 
             # Масштабируем и устанавливаем
             self.label_info.setPixmap(pixmap.scaled(

@@ -1,6 +1,6 @@
 from PyQt6 import QtWidgets, uic
 import sys
-from play_window import PlayWindow
+from play_window_st import PlayWindow
 from PyQt6.QtGui import QMovie
 
 
@@ -41,7 +41,7 @@ class StartWindow(QtWidgets.QMainWindow):
         self.bg_label.setScaledContents(True)
         self.bg_label.lower()
 
-        self.movie = QMovie("3a8d54d3c0bbaa991cdf8d468b5f7cd8ad506460r1-500-423_hq.gif")
+        self.movie = QMovie("pictures/3a8d54d3c0bbaa991cdf8d468b5f7cd8ad506460r1-500-423_hq.gif")
         self.bg_label.setMovie(self.movie)
         self.movie.start()
 
@@ -96,16 +96,9 @@ class StartWindow(QtWidgets.QMainWindow):
 
     def on_slider_released(self):
         """Изменение цвета текста в зависимости от значения слайдера"""
-        self.reset_text_colors()
-        value = self.vertical_slider.value()
-        if value == 3:
-            self.set_label_color(self.label3, 'red')
-        elif value == 2:
-            self.set_label_color(self.label2, 'blue')
-        elif value == 1:
-            self.set_label_color(self.label1, "green")
-        else:
-            self.set_label_color(self.label4, 'violet')
+        # Сюда впишите код настройки игры
+
+        # Сюда впишите код настройки игры
 
     def set_label_color(self, label, color):
         """Установка цвета текста для label"""
