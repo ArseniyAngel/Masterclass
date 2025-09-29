@@ -113,7 +113,6 @@ class PlayWindow(QtWidgets.QMainWindow):
             if self.label_info:
                 self.label_info.setText(f"✅ Нет приведения! +{points} очков")
 
-            QtWidgets.QApplication.processEvents()
             time.sleep(1.5)
             self.next_room()
         else:
@@ -122,6 +121,10 @@ class PlayWindow(QtWidgets.QMainWindow):
 
     def next_room(self):
         """Подготовка следующей комнаты"""
+        if self.difficulty != "infinity" and self.current_room >= self.total_rooms:
+            self.game_over(win=True)
+            return
+
         self.first_door.setIcon(QIcon("../pictures/Closed door.png"))
         self.first_door.setIconSize(self.first_door.size())
         self.second_door.setIcon(QIcon("../pictures/Closed door.png"))
@@ -129,9 +132,7 @@ class PlayWindow(QtWidgets.QMainWindow):
         self.third_door.setIcon(QIcon("../pictures/Closed door.png"))
         self.third_door.setIconSize(self.third_door.size())
 
-        if self.difficulty != "infinity" and self.current_room >= self.total_rooms:
-            self.game_over(win=True)
-            return
+
 
         self.current_room += 1
         self.ghost_door = randint(1, 3)
